@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body onload="receive();">
+        <script type="text/javascript">
+            function send() {
+                var messageBox = document.getElementById("message");
+                var text = messageBox.value;
+                messageBox.value = '';
+                doRequest("POST", "http://localhost:1337/send", text);
+            }
+
+            function receive() {
+                doRequest("POST", "http://localhost:1337/poll", "", function(text) {
+                    var div = document.createElement('div');
+                    div.appendChild(document.createTextNode(text));
+                    document.getElementById('chatwindow').appendChild(div);
+                    setTimeout(receive, 0);
+                });
+            }
+
+            function doRequest(method, url, contents, callback) {
+                var r = new XMLHttpRequest();
+                r.open(method, url, true);
+                r.onreadystatechange = function () {
+                    if (r.readyState !== 4)
+                        return;
+                    if (r.status === 200)
+                        callback && callback(r.responseText);
+                    else
+                        alert("A connection error occurred. Please reload to reconnect.")
+                };
+                r.send(contents);
+            }
+        </script>
+        <div id='chatwindow' style='width: 480px; border: 1px solid black; min-height: 480px;'></div>
+        <div>
+            <form>
+                <input id='message' type='text'/>
+                <input type="submit" value="Send" onclick="send();return false;"/>
+            </form>
+        </div>
+        <script type="text/javascript">document.getElementById("message").focus();</script>
+    </body>
+</html>
