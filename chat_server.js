@@ -5,7 +5,7 @@ http.createServer(function (req, res) {
     console.log("Incoming " + req.method + " request for URL " + req.url + ".");
     if (req.method == 'GET')
     {
-        fs.readFile('chat.html', 'UTF-8', function (err, data) {
+        fs.readFile('chat_client.html', 'UTF-8', function (err, data) {
             if (err) throw err;
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.end(data);
